@@ -1,0 +1,88 @@
+#!/usr/bin/env node
+const chalk = require('chalk')
+
+const install = require('./commands/install')
+const list = require('./commands/list')
+const remove = require('./commands/remove')
+const update = require('./commands/update')
+
+const commands = {
+  install: {
+    description: 'Install a plugin',
+    examples: [
+      [
+        '$0 install vim-syntastic/syntastic',
+        'Installs Syntastic from GitHub (https://github.com/vim-syntastic/syntastic)'
+      ],
+      [
+        '$0 install $HOME/my-plugin.vim',
+        'Symlinks local plugin directory my-plugin.vim'
+      ]
+    ],
+    handler: install
+  },
+  remove: {
+    description: 'Remove a plugin',
+    examples: [
+      [
+        '$0 remove syntastic',
+        'Removes the Syntastic module'
+      ]
+    ],
+    handler: remove
+  },
+  update: {
+    description: 'Update a plugin',
+    examples: [
+      [
+        '$0 update syntastic',
+        'Updates the syntastic plugin'
+      ],
+      [
+        '$0 update',
+        'Updates ALL plugins'
+      ]
+    ],
+    handler: update
+  },
+  list: {
+    description: 'Lists installed plugins',
+    examples: [
+      [
+        '$0 list',
+        'List all installed plugins'
+      ]
+    ],
+    handler: list,
+    quiet: true
+  }
+}
+
+const program = require('yargs')
+    .usage('Usage: $0 <command> [options]')
+    .help('h')
+    .alias('h', 'help')
+    .epilog('copyright 2015')
+
+for (const cmd in commands) {
+  program.command(cmd, commands[cmd].description)
+
+  commands[cmd].examples.forEach(e => program.example(...e))
+}
+
+const argv = program.argv
+
+const [command, ...options] = argv._
+
+commands[command].handler(...options)
+  .then(() => {
+    if (!commands[command].quiet) {
+      console.log(chalk.green('Success!'))
+    }
+    process.exit(0)
+  })
+  .catch(err => {
+    console.error(chalk.red(err))
+    console.error(chalk.red('Failed!'))
+    process.exit(1)
+  })

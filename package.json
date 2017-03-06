@@ -1,0 +1,24 @@
+{
+  "name": "vim-pathogen-manager",
+  "version": "1.0.0",
+  "description": "A CLI utility for managing Vim Pathogen plugins",
+  "bin": {
+    "vpm": "./vpm"
+  },
+  "scripts": {
+    "lint": "eslint vpm commands/*",
+    "test": "npm run lint"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "chalk": "^1.1.3",
+    "fs-extra-promise": "^0.4.1",
+    "simple-git": "^1.67.0",
+    "yargs": "^7.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.0"
+  }
+}
