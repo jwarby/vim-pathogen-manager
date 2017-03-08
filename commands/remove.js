@@ -9,13 +9,11 @@ module.exports = name => {
   const installLocation = `${INSTALL_DIR}/${name}`
 
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(installLocation)) {
-      return reject(new Error(`Plugin '${name}' is not installed`))
-    }
-
     return fs.lstatAsync(installLocation).then(stats => {
       if (stats.isSymbolicLink()) {
         console.log(chalk.cyan('Removing symbolic link...'))
+      } else if (!fs.existsSync(installLocation)) {
+        return reject(new Error(`Plugin '${name}' is not installed`))
       }
 
       return resolve(fs.removeAsync(installLocation))
